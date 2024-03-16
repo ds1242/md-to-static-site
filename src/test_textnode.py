@@ -16,6 +16,12 @@ class TestTextNode(unittest.TestCase):
         node = TextNode('This is a text node', "bold", 'boot.dev')
         node2 = TextNode('This is a text node', "bold", 'boot.dev')
         self.assertEqual(node, node2)
+
+    def text_type_diff(self):
+        node = TextNode('This is a text node', "bold", 'boot.dev')
+        node2 = TextNode('something else', 'italic', 'boot.dev')
+        self.assertNotEqual(node, node2)
+
         
 if __name__ == "__main__":
     unittest.main()
