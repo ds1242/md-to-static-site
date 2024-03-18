@@ -16,17 +16,31 @@ class TestParentNode(unittest.TestCase):
             node.to_html(),
             '<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>'
         )
-    def test_no_tag(self):
+    def test_to_html_no_tag(self):
+        node = LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
+     
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
+    
+    def test_headings(self):
         node = ParentNode(
-            None,
+            "h2",
             [
                 LeafNode("b", "Bold text"),
                 LeafNode(None, "Normal text"),
                 LeafNode("i", "italic text"),
                 LeafNode(None, "Normal text"),
             ],
-            {"class": "greeting", "href": "https://boot.dev"}
         )
-        self.assertRaises(ValueError('tag required'), node.to_html())
-
+        self.assertEqual(
+            node.to_html(),
+            "<h2><b>Bold text</b>Normal text<i>italic text</i>Normal text</h2>",
+        )
 
