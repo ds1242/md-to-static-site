@@ -35,3 +35,17 @@ class TextNode:
         if text_node.text_type == text_type_image:
             return LeafNode('img', "", {"src": text_node.url, "alt": text_node.alt_text})
         return ValueError(f'Invalid text type: {text_node.text_type}')
+    
+    def split_nodes_delimiter(old_nodes, delimiter, text_type):
+        output = []
+        if old_nodes is not TextNode:
+            output.append(old_nodes)
+        split_nodes = old_nodes.text.split(delimiter)
+        print(split_nodes)
+
+
+
+
+
+node = TextNode("This is text with a `code block` word", text_type_text)
+node.split_nodes_delimiter( "`", text_type_code)
