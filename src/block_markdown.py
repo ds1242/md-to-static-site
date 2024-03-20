@@ -65,3 +65,9 @@ def create_blockquote_node(block, block_type):
     value = block[1:]
     value = value.lstrip(" ")
     return HTMLNode(tag, value)
+
+def create_paragraph_node(block, block_type):
+    if block_type != block_type_paragraph:
+        raise Exception('wrong block type')
+    tag = "p"
+    return HTMLNode(tag, block)
