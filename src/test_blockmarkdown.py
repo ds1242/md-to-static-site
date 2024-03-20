@@ -91,6 +91,33 @@ This is the same paragraph on a new line
             block_to_block_type(md),
             block_type_heading
         )
+    def test_paragraph(self):
+        md = "This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_paragraph
+        )
+    def test_quote(self):
+        md = "> this is a quote"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_quote
+        )
+    def test_unordered_list_star(self):
+        md = """* this is an unordered list
+* second part of ordered list """
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_unordered_list
+        )
+    def test_unordered_list_dash(self):
+        md = """- this is an unordered list
+- second part of ordered list
+- third part of unordered list"""
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_unordered_list
+        )
 
 
 

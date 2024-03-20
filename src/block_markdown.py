@@ -20,8 +20,15 @@ def markdown_to_blocks(markdown):
 
 
 def block_to_block_type(block):
-    if re.match("^(#{1,6})\s(.*)", block):
+    if re.match(r"^(#{1,6})\s(.*)", block):
         return block_type_heading
-    # if re.match()
-    # heading_match = re.findall()
+    lines = block.split('\n')
+    if all(line.startswith('* ') or line.startswith('- ') for line in lines):
+        return block_type_unordered_list
+    if all(line.startswith('> ') for line in lines):
+        return block_type_quote
+    if all(line.startswith('{line}. ') for line in lines):
+        return block_type_ordered_list
+    else:
+        return block_type_paragraph
 
