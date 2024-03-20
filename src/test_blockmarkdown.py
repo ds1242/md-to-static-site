@@ -1,5 +1,15 @@
 import unittest
-from block_markdown import markdown_to_blocks
+from block_markdown import (
+    markdown_to_blocks,
+    block_to_block_type,
+
+    block_type_heading,
+    block_type_paragraph,
+    block_type_code,
+    block_type_quote,
+    block_type_unordered_list,
+    block_type_ordered_list
+)
 
 from textnode import (
     TextNode,
@@ -57,7 +67,30 @@ This is the same paragraph on a new line
         )
 
 
-
+    def test_heading_single_check(self):
+        md = "# This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_heading_three_check(self):
+        md = "### This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_heading_six(self):
+        md = "###### This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_not_heading(self):
+        md = "####### This is a heading"
+        self.assertNotEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
 
 
 
