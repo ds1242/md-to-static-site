@@ -1,16 +1,17 @@
 import unittest
 from block_markdown import (
-    markdown_to_blocks,
-    block_to_block_type,
-    create_heading_node,
-    create_blockquote_node,
-
     block_type_heading,
     block_type_paragraph,
     block_type_code,
     block_type_quote,
     block_type_unordered_list,
-    block_type_ordered_list
+    block_type_ordered_list,
+
+    markdown_to_blocks,
+    block_to_block_type,
+    create_heading_node,
+    create_blockquote_node,
+    create_paragraph_node,
 )
 
 from textnode import (
@@ -174,7 +175,13 @@ more stuff goes into this
             htmlnode.__repr__(),
             f"HTMLNode(blockquote, text that is the heading, children: None, None)"
         )
-
+    def test_create_paragraph(self):
+        block = "text that goes into the paragraph"
+        htmlnode = create_paragraph_node(block, block_type_paragraph)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(p, text that goes into the paragraph, children: None, None)"
+        )
 
 
 if __name__ == "__main__":
