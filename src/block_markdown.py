@@ -1,4 +1,5 @@
 import re
+from htmlnode import HTMLNode
 
 block_type_paragraph = 'paragraph'
 block_type_heading = 'heading'
@@ -41,3 +42,18 @@ def is_ordered_list(lines):
         if not line.startswith(expected_start):
             return False
     return True
+
+
+def create_heading_node(block, block_type):
+    if block_type != block_type_heading:
+        raise Exception('wrong block type')
+    tag = ""
+    word_list = []
+    split_block = block.split(" ")
+    count = len(split_block[0])
+
+    value = block[count:]
+    value = value.strip(" ")
+    print(value)
+    tag = 'h' + str(count)
+    return HTMLNode(tag, value, None, None)
