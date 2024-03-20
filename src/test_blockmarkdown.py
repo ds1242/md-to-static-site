@@ -146,7 +146,7 @@ more stuff goes into this
         self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
     def test_create_heading_node(self):
-        block = "##text that is the heading"
+        block = "## text that is the heading"
         htmlnode = create_heading_node(block, block_type_heading)
         # self.assertEqual(
         #     htmlnode.__repr__(),

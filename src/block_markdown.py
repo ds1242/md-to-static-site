@@ -53,6 +53,6 @@ def create_heading_node(block, block_type):
 
     value = block[count:]
     value = value.strip(" ")
-    
+
     tag = 'h' + str(count)
-    return HTMLNode(tag, value, None, None)
+    return HTMLNode(tag, value)
