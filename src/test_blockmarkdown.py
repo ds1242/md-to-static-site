@@ -1,5 +1,17 @@
 import unittest
-from block_markdown import markdown_to_blocks
+from block_markdown import (
+    markdown_to_blocks,
+    block_to_block_type,
+    create_heading_node,
+    create_blockquote_node,
+
+    block_type_heading,
+    block_type_paragraph,
+    block_type_code,
+    block_type_quote,
+    block_type_unordered_list,
+    block_type_ordered_list
+)
 
 from textnode import (
     TextNode,
@@ -11,16 +23,159 @@ from textnode import (
     text_type_link
 )
 
-class TestBlockMarkdown(unittest.TestCase):
+
+class TestMarkdownToHTML(unittest.TestCase):
     def test_markdown_to_blocks(self):
-        text_block = """ 
-        This is **bolded** paragraph
+        md = """
+This is **bolded** paragraph
 
-        This is another paragraph with *italic* text and `code` here
-        This is the same paragraph on a new line
+This is another paragraph with *italic* text and `code` here
+This is the same paragraph on a new line
 
-        * This is a list
-        * with items      
-        """
-        list_of_text = markdown_to_blocks(text_block)
-        print(list_of_text)
+* This is a list
+* with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
+                "* This is a list\n* with items",
+            ],
+        )
+
+    def test_markdown_to_blocks_newlines(self):
+        md = """
+This is **bolded** paragraph
+
+
+
+
+This is another paragraph with *italic* text and `code` here
+This is the same paragraph on a new line
+
+* This is a list
+* with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
+                "* This is a list\n* with items",
+            ],
+        )
+
+
+    def test_heading_single_check(self):
+        md = "# This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_heading_three_check(self):
+        md = "### This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_heading_six(self):
+        md = "###### This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_not_heading(self):
+        md = "####### This is a heading"
+        self.assertNotEqual(
+            block_to_block_type(md),
+            block_type_heading
+        )
+    def test_paragraph(self):
+        md = "This is a heading"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_paragraph
+        )
+    def test_quote(self):
+        md = "> this is a quote"
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_quote
+        )
+    def test_unordered_list_star(self):
+        md = """* this is an unordered list
+* second part of unordered list """
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_unordered_list
+        )
+    def test_unordered_list_dash(self):
+        md = """- this is an unordered list
+- second part of unordered list
+- third part of unordered list"""
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_unordered_list
+        )
+    def test_ordered_list(self):
+        md = """1. this is an unordered list
+2. second part of unordered list
+3. third part of unordered list"""
+        self.assertEqual(
+            block_to_block_type(md),
+            block_type_ordered_list
+        )
+    def test_block_code(self):
+        md = '''``` a block of code goes here
+more stuff goes into this
+```'''
+    def test_block_to_block_types(self):
+        block = "# heading"
+        self.assertEqual(block_to_block_type(block), block_type_heading)
+        block = "```\ncode\n```"
+        self.assertEqual(block_to_block_type(block), block_type_code)
+        block = "> quote\n> more quote"
+        self.assertEqual(block_to_block_type(block), block_type_quote)
+        block = "* list\n* items"
+        self.assertEqual(block_to_block_type(block), block_type_unordered_list)
+        block = "1. list\n2. items"
+        self.assertEqual(block_to_block_type(block), block_type_ordered_list)
+        block = "paragraph"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+
+    def test_create_heading_node(self):
+        block = "## text that is the heading"
+        htmlnode = create_heading_node(block, block_type_heading)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(h2, text that is the heading, children: None, None)"
+        )
+    def test_create_heading_no_space(self):
+        block = "##text that is the heading"
+        htmlnode = create_heading_node(block, block_type_heading)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(h2, text that is the heading, children: None, None)"
+        )
+    def test_create_quote(self):
+        block = "> text that is the heading"
+        htmlnode = create_blockquote_node(block, block_type_quote)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(blockquote, text that is the heading, children: None, None)"
+        )
+    def test_create_quote_no_space(self):
+        block = ">text that is the heading"
+        htmlnode = create_blockquote_node(block, block_type_quote)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(blockquote, text that is the heading, children: None, None)"
+        )
+
+
+
+if __name__ == "__main__":
+    unittest.main()
