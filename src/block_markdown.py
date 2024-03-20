@@ -49,11 +49,10 @@ def create_heading_node(block, block_type):
         raise Exception('wrong block type')
     tag = ""
     word_list = []
-    split_block = block.split(" ")
-    count = len(split_block[0])
+    count = block.count('#')
 
     value = block[count:]
     value = value.strip(" ")
-    print(value)
+    
     tag = 'h' + str(count)
     return HTMLNode(tag, value, None, None)
