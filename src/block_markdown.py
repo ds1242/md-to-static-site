@@ -48,11 +48,20 @@ def create_heading_node(block, block_type):
     if block_type != block_type_heading:
         raise Exception('wrong block type')
     tag = ""
-    word_list = []
     count = block.count('#')
 
     value = block[count:]
     value = value.strip(" ")
 
     tag = 'h' + str(count)
+    return HTMLNode(tag, value)
+
+def create_blockquote_node(block, block_type):
+    if block_type != block_type_quote:
+        raise Exception('wrong block type')
+    tag = ""
+    if block.startswith(">"):
+        tag = "blockquote"
+    value = block[1:]
+    value = value.lstrip(" ")
     return HTMLNode(tag, value)

@@ -3,6 +3,7 @@ from block_markdown import (
     markdown_to_blocks,
     block_to_block_type,
     create_heading_node,
+    create_blockquote_node,
 
     block_type_heading,
     block_type_paragraph,
@@ -148,10 +149,31 @@ more stuff goes into this
     def test_create_heading_node(self):
         block = "## text that is the heading"
         htmlnode = create_heading_node(block, block_type_heading)
-        # self.assertEqual(
-        #     htmlnode.__repr__(),
-        #     f"HTMLNode(h2, text that is the heading, children: None, None)"
-        # )
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(h2, text that is the heading, children: None, None)"
+        )
+    def test_create_heading_no_space(self):
+        block = "##text that is the heading"
+        htmlnode = create_heading_node(block, block_type_heading)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(h2, text that is the heading, children: None, None)"
+        )
+    def test_create_quote(self):
+        block = "> text that is the heading"
+        htmlnode = create_blockquote_node(block, block_type_quote)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(blockquote, text that is the heading, children: None, None)"
+        )
+    def test_create_quote_no_space(self):
+        block = ">text that is the heading"
+        htmlnode = create_blockquote_node(block, block_type_quote)
+        self.assertEqual(
+            htmlnode.__repr__(),
+            f"HTMLNode(blockquote, text that is the heading, children: None, None)"
+        )
 
 
 
