@@ -23,6 +23,8 @@ def block_to_block_type(block):
     lines = block.split('\n')
     if re.match(r"^(#{1,6})\s(.*)", block):
         return block_type_heading
+    if block.startswith('```') and block.endswith('```'):
+        return block_type_code
     elif all(line.startswith('* ') or line.startswith('- ') for line in lines):
         return block_type_unordered_list
     elif all(line.startswith('> ') for line in lines):

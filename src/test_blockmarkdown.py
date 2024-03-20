@@ -126,6 +126,23 @@ This is the same paragraph on a new line
             block_to_block_type(md),
             block_type_ordered_list
         )
+    def test_block_code(self):
+        md = '''``` a block of code goes here
+more stuff goes into this
+```'''
+    def test_block_to_block_types(self):
+        block = "# heading"
+        self.assertEqual(block_to_block_type(block), block_type_heading)
+        block = "```\ncode\n```"
+        self.assertEqual(block_to_block_type(block), block_type_code)
+        block = "> quote\n> more quote"
+        self.assertEqual(block_to_block_type(block), block_type_quote)
+        block = "* list\n* items"
+        self.assertEqual(block_to_block_type(block), block_type_unordered_list)
+        block = "1. list\n2. items"
+        self.assertEqual(block_to_block_type(block), block_type_ordered_list)
+        block = "paragraph"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
 
 
