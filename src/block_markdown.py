@@ -71,3 +71,47 @@ def create_paragraph_node(block, block_type):
         raise Exception('wrong block type')
     tag = "p"
     return HTMLNode(tag, block)
+
+def create_ul_node(block, block_type):
+    if block_type != block_type_unordered_list:
+        raise Exception('Not unordered list. wrong block type')
+    children = []
+    split_block = block.split('\n')
+    for line in split_block:
+        children.append(HTMLNode('li', line.strip('-*+ ')))
+    tag = 'ul'
+    return HTMLNode(tag, None, children)
+
+def create_ol_node(block, block_type):
+    if block_type != block_type_ordered_list:
+        raise Exception('Not unordered list. wrong block type')
+    children = []
+    split_block = block.split('\n')
+    for line in split_block:
+        children.append(HTMLNode('li', line.strip('-*+ ')))
+    tag = 'ol'
+    return HTMLNode(tag, None, children)
+
+def create_code_node(block, block_type):
+    if block_type != block_type_code:
+        raise Exception('Not a code block. Wrong block type')
+    tag = 'pre'
+    return HTMLNode(tag, None, HTMLNode('code', block))
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    children = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        if block_type == block_type_heading:
+            children.append(create_heading_node(block, block_type))
+        elif block_type == block_type_quote:
+            children.append(create_blockquote_node(block, block_type))
+        elif block_type == block_type_code:
+            children.append(create_code_node(block, block_type))
+        elif block_type == block_type_ordered_list:
+            children.append(create_ol_node(block, block_type))
+        elif block_type == block_type_unordered_list:
+            children.append(create_ul_node(block, block_type))
+
+    return HTMLNode('div', None, children)
