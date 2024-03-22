@@ -1,5 +1,7 @@
 import re
-from htmlnode import HTMLNode
+from htmlnode import ParentNode
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node
 
 block_type_paragraph = 'paragraph'
 block_type_heading = 'heading'
@@ -43,22 +45,28 @@ def is_ordered_list(lines):
             return False
     return True
 
+def text_to_children(text):
+    text_nodes = text_to_textnodes(text)
+    children = []
+    for text_node in text_nodes:
+        html_node = text_node_to_html_node(text_node)
+        children.append(html_node)
+    return children
 
-def create_heading_node(block, block_type):
-    if block_type != block_type_heading:
-        raise Exception('wrong block type')
-    tag = ""
-    count = block.count('#')
+def create_heading_node(block):
+    level = 0
+    for char in block:
+        if char == '#':
+            level += 1
+        else:
+            break
+    if level + 1 >= len(block):
+        raise ValueError(f'Invalid heading level: {level}')
+    text = block[level + 1: ]
+    children = text_to_children(text)
+    return ParentNode(f"h{level}", children)
 
-    value = block[count:]
-    value = value.strip(" ")
-
-    tag = 'h' + str(count)
-    return HTMLNode(tag, value)
-
-def create_blockquote_node(block, block_type):
-    if block_type != block_type_quote:
-        raise Exception('wrong block type')
+def create_blockquote_node(block):
     tag = ""
     if block.startswith(">"):
         tag = "blockquote"
@@ -66,15 +74,13 @@ def create_blockquote_node(block, block_type):
     value = value.lstrip(" ")
     return HTMLNode(tag, value)
 
-def create_paragraph_node(block, block_type):
-    if block_type != block_type_paragraph:
-        raise Exception('wrong block type')
-    tag = "p"
-    return HTMLNode(tag, block)
+def create_paragraph_node(block):
+    lines = block.split("\n")
+    paragraph = " ".join(lines)
+    children = text_to_children(paragraph)
+    return ParentNode("p", children)
 
-def create_ul_node(block, block_type):
-    if block_type != block_type_unordered_list:
-        raise Exception('Not unordered list. wrong block type')
+def create_ul_node(block):
     children = []
     split_block = block.split('\n')
     for line in split_block:
@@ -82,9 +88,7 @@ def create_ul_node(block, block_type):
     tag = 'ul'
     return HTMLNode(tag, None, children)
 
-def create_ol_node(block, block_type):
-    if block_type != block_type_ordered_list:
-        raise Exception('Not unordered list. wrong block type')
+def create_ol_node(block):
     children = []
     split_block = block.split('\n')
     for line in split_block:
@@ -92,11 +96,13 @@ def create_ol_node(block, block_type):
     tag = 'ol'
     return HTMLNode(tag, None, children)
 
-def create_code_node(block, block_type):
-    if block_type != block_type_code:
-        raise Exception('Not a code block. Wrong block type')
-    tag = 'pre'
-    return HTMLNode(tag, None, HTMLNode('code', block))
+def create_code_node(block):
+    if not block.startswith("```") or not block.endswith("```"):
+        raise ValueError("Invalid code block")
+    text = block[4:-3]
+    children = text_to_children(text)
+    code = ParentNode("code", children)
+    return ParentNode("pre", [code])
 
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
