@@ -67,12 +67,16 @@ def create_heading_node(block):
     return ParentNode(f"h{level}", children)
 
 def create_blockquote_node(block):
-    tag = ""
-    if block.startswith(">"):
-        tag = "blockquote"
-    value = block[1:]
-    value = value.lstrip(" ")
-    return HTMLNode(tag, value)
+    lines = block.split('\n')
+    new_lines = []
+    for line in lines:
+        if not line.startswith('>'):
+            raise ValueError('Invalid quote block')
+        new_lines.append(line.lstrip('>').strip())
+    content = " ".join(new_lines)
+    children = text_to_children(content)
+    return ParentNode("blockquote", children)
+
 
 def create_paragraph_node(block):
     lines = block.split("\n")
