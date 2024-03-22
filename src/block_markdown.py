@@ -85,12 +85,13 @@ def create_paragraph_node(block):
     return ParentNode("p", children)
 
 def create_ul_node(block):
-    children = []
+    html_items = []
     split_block = block.split('\n')
     for line in split_block:
-        children.append(HTMLNode('li', line.strip('-*+ ')))
-    tag = 'ul'
-    return HTMLNode(tag, None, children)
+        text = line[3:]
+        children = text_to_children(text)
+        html_items.append(ParentNode("li", children))
+    return ParentNode("ul", html_items)
 
 def create_ol_node(block):
     children = []
