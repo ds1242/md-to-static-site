@@ -36,6 +36,22 @@ def block_to_block_type(block):
         return block_type_ordered_list
     else:
         return block_type_paragraph
+    
+def block_to_html_node(block):
+    block_type = block_to_block_type(block)
+    if block_type == block_type_paragraph:
+        return create_paragraph_node(block)
+    if block_type == block_type_heading:
+        return create_heading_node(block)
+    if block_type == block_type_code:
+        return create_code_node(block)
+    if block_type == block_type_ordered_list:
+        return create_ol_node(block)
+    if block_type == block_type_unordered_list:
+        return create_ul_node(block)
+    if block_type == block_type_quote:
+        return create_blockquote_node(block)
+    raise ValueError("Invalid block type")
 
 
 def is_ordered_list(lines):
@@ -88,18 +104,19 @@ def create_ul_node(block):
     html_items = []
     split_block = block.split('\n')
     for line in split_block:
-        text = line[3:]
+        text = line[2:]
         children = text_to_children(text)
         html_items.append(ParentNode("li", children))
     return ParentNode("ul", html_items)
 
 def create_ol_node(block):
-    children = []
+    html_items = []
     split_block = block.split('\n')
     for line in split_block:
-        children.append(HTMLNode('li', line.strip('-*+ ')))
-    tag = 'ol'
-    return HTMLNode(tag, None, children)
+        text = line[3:]
+        children = text_to_children(text)
+        html_items.append(ParentNode('li',children))
+    return ParentNode('ol', html_items)
 
 def create_code_node(block):
     if not block.startswith("```") or not block.endswith("```"):
@@ -113,16 +130,6 @@ def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
     children = []
     for block in blocks:
-        block_type = block_to_block_type(block)
-        if block_type == block_type_heading:
-            children.append(create_heading_node(block, block_type))
-        elif block_type == block_type_quote:
-            children.append(create_blockquote_node(block, block_type))
-        elif block_type == block_type_code:
-            children.append(create_code_node(block, block_type))
-        elif block_type == block_type_ordered_list:
-            children.append(create_ol_node(block, block_type))
-        elif block_type == block_type_unordered_list:
-            children.append(create_ul_node(block, block_type))
-
-    return HTMLNode('div', None, children)
+        html_node = block_to_html_node(block)
+        children.append(html_node)
+    return ParentNode('div', children, None)

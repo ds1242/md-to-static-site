@@ -9,23 +9,7 @@ from block_markdown import (
 
     markdown_to_blocks,
     block_to_block_type,
-    create_heading_node,
-    create_blockquote_node,
-    create_paragraph_node,
-    create_ul_node,
-    create_ol_node,
-    create_code_node,
     markdown_to_html_node,
-)
-
-from textnode import (
-    TextNode,
-    text_type_text,
-    text_type_bold,
-    text_type_italic,
-    text_type_code,
-    text_type_image,
-    text_type_link
 )
 
 
@@ -73,70 +57,6 @@ This is the same paragraph on a new line
             ],
         )
 
-
-    def test_heading_single_check(self):
-        md = "# This is a heading"
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_heading
-        )
-    def test_heading_three_check(self):
-        md = "### This is a heading"
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_heading
-        )
-    def test_heading_six(self):
-        md = "###### This is a heading"
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_heading
-        )
-    def test_not_heading(self):
-        md = "####### This is a heading"
-        self.assertNotEqual(
-            block_to_block_type(md),
-            block_type_heading
-        )
-    def test_paragraph(self):
-        md = "This is a heading"
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_paragraph
-        )
-    def test_quote(self):
-        md = "> this is a quote"
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_quote
-        )
-    def test_unordered_list_star(self):
-        md = """* this is an unordered list
-* second part of unordered list """
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_unordered_list
-        )
-    def test_unordered_list_dash(self):
-        md = """- this is an unordered list
-- second part of unordered list
-- third part of unordered list"""
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_unordered_list
-        )
-    def test_ordered_list(self):
-        md = """1. this is an unordered list
-2. second part of unordered list
-3. third part of unordered list"""
-        self.assertEqual(
-            block_to_block_type(md),
-            block_type_ordered_list
-        )
-    def test_block_code(self):
-        md = '''``` a block of code goes here
-more stuff goes into this
-```'''
     def test_block_to_block_types(self):
         block = "# heading"
         self.assertEqual(block_to_block_type(block), block_type_heading)
@@ -233,7 +153,7 @@ this is paragraph text
             html,
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
-    
+
 
 if __name__ == "__main__":
     unittest.main()
