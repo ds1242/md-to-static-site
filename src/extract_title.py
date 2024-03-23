@@ -1,4 +1,8 @@
 
 def extract_title(markdown):
     split_file = markdown.split("\n")
-    return split_file[0].strip('# ')
+    for line in split_file:
+        if line.startswith("#"):
+            return line.strip('# ')
+        else:
+            raise Exception('No h1 on the document')
