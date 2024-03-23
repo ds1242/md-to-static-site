@@ -14,10 +14,6 @@ def copy_files(source_path, destination):
         else:
             destination = destination + curr_path[len(source_path):]            
             copy_files(curr_path, destination)
-    
-
-
-
 
 
 def check_destination(destination):
