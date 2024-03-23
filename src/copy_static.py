@@ -7,13 +7,8 @@ def copy_files(source_path, destination):
 
     if not os.path.exists(source_path):
         raise Exception('not a valid path')
-    
-    if os.path.isfile(source_path):
-        shutil.copy(source_path, destination)
-    else:
-        path_list = os.listdir(path=source_path)
-
-    for current_path in path_list:
+        
+    for current_path in os.listdir(source_path):
         curr_path = os.path.join(source_path, current_path)
         if os.path.isfile(curr_path):
             shutil.copy(curr_path, destination)
