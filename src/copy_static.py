@@ -21,14 +21,16 @@ def create_file_path(path, output_list):
 
 
 def copy_files(path_list, destination):
-    if not os.path.exists(destination):
-        raise Exception('destination path does not exist')
-
+    destination_path_list = []
+    if os.path.exists(destination):
+        shutil.rmtree(destination)
+    os.mkdir(destination)
     if len(path_list) == 0:
         raise Exception('no source available')
     
     for path in path_list:
-        shutil.copy(path, destination, )
+        destination_path_list.append(shutil.copy(path, destination))
+    return destination_path_list
 
 
 def trim_path_list(path_list, start_path):
@@ -38,4 +40,4 @@ def trim_path_list(path_list, start_path):
     return trimmed_list
 
     
-    
+        

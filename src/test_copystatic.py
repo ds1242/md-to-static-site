@@ -12,10 +12,9 @@ class TestCopyStaticFiles(unittest.TestCase):
         output = []
         start_path = './static'
         output = create_file_path(start_path, output)
-        output = trim_path_list(output, start_path)
         self.assertEqual(
             output,
-            ['/index.css', '/images/rivendell.png']
+            ['./static/index.css', './static/images/rivendell.png']
         )
 
     def test_file_path_no_dir(self):
@@ -28,8 +27,12 @@ class TestCopyStaticFiles(unittest.TestCase):
         )
 
     def test_copy_file(self):
+        destination_list = []
         list_of_files = []
         list_of_files = create_file_path('./static', list_of_files)
+        print(list_of_files)
         destination = './public'
-        copy_files(list_of_files, destination)
-    
+        destination_list = copy_files(list_of_files, destination)
+
+        print(destination_list)
+        
