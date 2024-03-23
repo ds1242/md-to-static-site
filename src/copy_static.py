@@ -33,11 +33,6 @@ def copy_files(path_list, destination):
     return destination_path_list
 
 
-def trim_path_list(path_list, start_path):
-    trimmed_list = []
-    for path in path_list:
-        trimmed_list.append(path[len(start_path):])
-    return trimmed_list
 
     
         
