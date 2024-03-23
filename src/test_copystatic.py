@@ -1,7 +1,8 @@
 import unittest
 from copy_static import (
     create_file_path,
-    copy_files
+    copy_files,
+    trim_path_list
 )
 
 
@@ -11,9 +12,10 @@ class TestCopyStaticFiles(unittest.TestCase):
         output = []
         start_path = './static'
         output = create_file_path(start_path, output)
+        output = trim_path_list(output, start_path)
         self.assertEqual(
             output,
-            ['./static/index.css', './static/images/rivendell.png']
+            ['/index.css', '/images/rivendell.png']
         )
 
     def test_file_path_no_dir(self):

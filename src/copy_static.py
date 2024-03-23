@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def create_file_path(path, output_list):
     path_list = []
@@ -22,5 +23,19 @@ def create_file_path(path, output_list):
 def copy_files(path_list, destination):
     if not os.path.exists(destination):
         raise Exception('destination path does not exist')
+
+    if len(path_list) == 0:
+        raise Exception('no source available')
+    
+    for path in path_list:
+        shutil.copy(path, destination, )
+
+
+def trim_path_list(path_list, start_path):
+    trimmed_list = []
+    for path in path_list:
+        trimmed_list.append(path[len(start_path):])
+    return trimmed_list
+
     
     
