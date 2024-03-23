@@ -1,7 +1,9 @@
 import unittest
 from copy_static import (
-    create_file_path
+    create_file_path,
+    copy_files
 )
+
 
 
 class TestCopyStaticFiles(unittest.TestCase):
@@ -23,11 +25,9 @@ class TestCopyStaticFiles(unittest.TestCase):
             ['./static/images/rivendell.png']
         )
 
-    def test_invalid_path(self):
-        output = []
-        start_path = '/'
-        output = create_file_path(start_path, output)
-        self.assertEqual(
-            output,
-            Exception('not a valid path')
-        )
+    def test_copy_file(self):
+        list_of_files = []
+        list_of_files = create_file_path('./static', list_of_files)
+        destination = './public'
+        copy_files(list_of_files, destination)
+    
