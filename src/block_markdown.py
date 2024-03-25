@@ -11,31 +11,53 @@ block_type_unordered_list = 'unordered_list'
 block_type_ordered_list = 'ordered_list'
 
 def markdown_to_blocks(markdown):
-    output = []
-    split_block = markdown.split("\n\n")
-    for block in split_block:
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
         if block == "":
             continue
-        else:
-            block = block.strip()
-            output.append(block)
-    return output
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
 
 
 def block_to_block_type(block):
-    lines = block.split('\n')
-    if re.match(r"^(#{1,6})\s(.*)", block):
+    lines = block.split("\n")
+
+    if (
+        block.startswith("# ")
+        or block.startswith("## ")
+        or block.startswith("### ")
+        or block.startswith("#### ")
+        or block.startswith("##### ")
+        or block.startswith("###### ")
+    ):
         return block_type_heading
-    if block.startswith('```') and block.endswith('```'):
+    if len(lines) > 1 and lines[0].startswith("```") and lines[-1].startswith("```"):
         return block_type_code
-    elif all(line.startswith('* ') or line.startswith('- ') for line in lines):
-        return block_type_unordered_list
-    elif all(line.startswith('> ') for line in lines):
+    if block.startswith(">"):
+        for line in lines:
+            if not line.startswith(">"):
+                return block_type_paragraph
         return block_type_quote
-    elif is_ordered_list(lines):
+    if block.startswith("* "):
+        for line in lines:
+            if not line.startswith("* "):
+                return block_type_paragraph
+        return block_type_unordered_list
+    if block.startswith("- "):
+        for line in lines:
+            if not line.startswith("- "):
+                return block_type_paragraph
+        return block_type_unordered_list
+    if block.startswith("1. "):
+        i = 1
+        for line in lines:
+            if not line.startswith(f"{i}. "):
+                return block_type_paragraph
+            i += 1
         return block_type_ordered_list
-    else:
-        return block_type_paragraph
+    return block_type_paragraph
     
 def block_to_html_node(block):
     block_type = block_to_block_type(block)
@@ -52,14 +74,6 @@ def block_to_html_node(block):
     if block_type == block_type_quote:
         return create_blockquote_node(block)
     raise ValueError("Invalid block type")
-
-
-def is_ordered_list(lines):
-    for i, line in enumerate(lines, start=1):
-        expected_start = f"{i}"
-        if not line.startswith(expected_start):
-            return False
-    return True
 
 def text_to_children(text):
     text_nodes = text_to_textnodes(text)
