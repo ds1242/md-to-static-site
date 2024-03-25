@@ -1,4 +1,5 @@
 import os
+import pathlib
 from generate_page import generate_page
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
@@ -9,6 +10,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         set_source_path = os.path.join(dir_path_content, path)
         set_dest_path = os.path.join(dest_dir_path, path)
         if os.path.isfile(set_source_path):
-            generate_page(set_source_path, template_path, set_dest_path)
+            p =  pathlib.PurePath(set_dest_path)            
+            generate_page(set_source_path, template_path, p.with_name('index.html'))
         else:
             generate_pages_recursive(set_source_path, template_path, set_dest_path)
