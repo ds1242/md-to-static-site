@@ -10,15 +10,10 @@ md_source = './content'
 template = './template.html'
 
 
-def check_destination(destination):
-    if os.path.exists(destination):
-        print('clearing')
-        shutil.rmtree(destination)
-    os.mkdir(destination)
+
 
 def main():
     # test_node = TextNode("This is a text node", "bold", "https://www.boot.dev")
-    check_destination(destination)
     copy_files(source_path, destination)
     generate_page(os.path.join(md_source, "index.md"), template, os.path.join(destination, "index.html"))
 

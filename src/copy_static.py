@@ -17,6 +17,7 @@ def copy_files(source_path, destination):
 
 
 def check_destination(destination):
+    print('clearing directory')
     if os.path.exists(destination):
         shutil.rmtree(destination)
     os.mkdir(destination)
